@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://th.bing.com/th/id/OIG3.JvaumPrDYIZ6H1aumWTs?pid=ImgGn" type="image/png">
+    <title>Rinha de Galos de Magic</title>
+    <style>
+        body {
+            font-family: 'Garamond', serif;
+            text-align: center;
+            background-image: url(https://static.wixstatic.com/media/962e9c_9b17082327da45129f91cdd261a01b10~mv2.jpg/v1/fill/w_1920,h_1029,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/962e9c_9b17082327da45129f91cdd261a01b10~mv2.jpg);
+            background-position: center; ;
+            background-attachment: fixed;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #e7c114;
+            margin-top: 40px;
+        }
+
+        .galo-container {
+            display: inline-block;
+            background-color: #2b2b2b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            box-shadow: 0px 0px 10px rgba(243, 208, 8, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #e62301e5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #battle-log {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #e7c114;
+        }
+
+        .galo-winner {
+            animation: blink 0.5s infinite alternate;
+        }
+
+        @keyframes blink {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0.5;
+            }
+        }
+
+        .center-image {
+            margin-top: 50px;
+        }
+
+        .mystical-image {
+            width: 300px; /* Ajuste conforme necessário */
+            margin-top: 20px;
+            border-radius: 50%;
+            border: 5px solid #e7c114;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        #restart-button {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rinha de Galos de Magic</h1>
+    <div class="center-image">
+        <img src="https://th.bing.com/th/id/OIG3.JvaumPrDYIZ6H1aumWTs?pid=ImgGn" alt="Imagem mística" class="mystical-image">
+    </div>
+    <div class="galo-container" id="galo1Container">
+        <h2>Galo 1</h2>
+        <button id="galo1Btn">Atacar</button>
+        <p>Vida: <span id="galo1Life">20</span></p>
+    </div>
+    <div class="galo-container" id="galo2Container">
+        <h2>Galo 2</h2>
+        <button id="galo2Btn">Atacar</button>
+        <p>Vida: <span id="galo2Life">20</span></p>
+    </div>
+    <div id="battle-log"></div>
+
+    <button id="restart-button">Reiniciar</button>
+
+<p></p>
+
+    <script>
+        const originalGalo1Life = 20;
+        const originalGalo2Life = 20;
+
+        let galo1;
+        let galo2;
+
+        const battleLog = document.getElementById("battle-log");
+        const galo1Btn = document.getElementById("galo1Btn");
+        const galo2Btn = document.getElementById("galo2Btn");
+        const galo1Life = document.getElementById("galo1Life");
+        const galo2Life = document.getElementById("galo2Life");
+        const galo1Container = document.getElementById("galo1Container");
+        const galo2Container = document.getElementById("galo2Container");
+        const restartButton = document.getElementById("restart-button");
+
+        function resetGame() {
+            galo1 = new Galo("Galo 1", originalGalo1Life);
+            galo2 = new Galo("Galo 2", originalGalo2Life);
+            updateUI();
+            battleLog.innerHTML = "";
+            galo1Container.classList.remove("galo-winner");
+            galo2Container.classList.remove("galo-winner");
+        }
+
+        restartButton.addEventListener("click", resetGame);
+
+        class Galo {
+            constructor(nome, vida) {
+                this.nome = nome;
+                this.vida = vida;
+                this.cartasAtaque = ["Bicada", "Garras Afiadas", "Espiral de Fogo", "Rajada de Penas"];
+            }
+        
+            atacar() {
+                const cartaAtaque = this.cartasAtaque[Math.floor(Math.random() * this.cartasAtaque.length)];
+                const poderAtaque = this.getPoderAtaque();
+                return `${cartaAtaque} (${poderAtaque})`;
+            }
+
+            getPoderAtaque() {
+                const now = new Date();
+                const milliseconds = now.getMilliseconds();
+                return (milliseconds % 10) + 1;
+            }
+        
+            sofrerDano(dano) {
+                this.vida -= dano;
+                if (this.vida < 0) {
+                    this.vida = 0;
+                }
+            }
+        }
+
+        function updateUI() {
+            galo1Life.textContent = galo1.vida;
+            galo2Life.textContent = galo2.vida;
+        }
+
+        function logBattle(message) {
+            const logEntry = document.createElement("p");
+            logEntry.textContent = message;
+            battleLog.appendChild(logEntry);
+        }
+
+        galo1Btn.addEventListener("click", () => {
+            const ataqueGalo1 = galo1.atacar();
+            const ataqueGalo2 = galo2.atacar();
+            const poderGalo1 = parseInt(ataqueGalo1.match(/\d+/)[0]);
+            const poderGalo2 = parseInt(ataqueGalo2.match(/\d+/)[0]);
+            const damage = poderGalo1 > poderGalo2 ? 1 : poderGalo2 > poderGalo1 ? -1 : 0;
+
+            if (damage === 1) {
+                galo2.sofrerDano(1);
+                if (galo2.vida === 0) {
+                    galo2Container.classList.add("galo-winner");
+                }
+            } else if (damage === -1) {
+                galo1.sofrerDano(1);
+                if (galo1.vida === 0) {
+                    galo1Container.classList.add("galo-winner");
+                }
+            }
+
+            updateUI();
+            logBattle(`${galo1.nome} atacou com ${ataqueGalo1} e ${galo2.nome} atacou com ${ataqueGalo2}.`);
+        });
+
+        galo2Btn.addEventListener("click", () => {
+            const ataqueGalo1 = galo1.atacar();
+            const ataqueGalo2 = galo2.atacar();
+            const poderGalo1 = parseInt(ataqueGalo1.match(/\d+/)[0]);
+            const poderGalo2 = parseInt(ataqueGalo2.match(/\d+/)[0]);
+            const damage = poderGalo1 > poderGalo2 ? 1 : poderGalo2 > poderGalo1 ? -1 : 0;
+
+            if (damage === 1) {
+                galo1.sofrerDano(1);
+                if (galo1.vida === 0) {
+                    galo1Container.classList.add("galo-winner");
+                }
+            } else if (damage === -1) {
+                galo2.sofrerDano(1);
+                if (galo2.vida === 0) {
+                    galo2Container.classList.add("galo-winner");
+                }
+            }
+
+            updateUI();
+            logBattle(`${galo2.nome} atacou com ${ataqueGalo2} e ${galo1.nome} atacou com ${ataqueGalo1}.`);
+        });
+
+        resetGame(); // Inicia o jogo ao carregar a página
+    </script>
+</body>
+</html>
